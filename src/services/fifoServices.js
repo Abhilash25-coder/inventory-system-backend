@@ -21,6 +21,13 @@ export async function handlePurchase(event) {
 export async function handleSale(event) {
   const { product_id, quantity, timestamp } = event;
 
+  // Ensure product exists before processing sale (to satisfy foreign key constraint)
+  await pool.query(
+    `INSERT INTO products (product_id) VALUES ($1)
+     ON CONFLICT (product_id) DO NOTHING;`,
+    [product_id]
+  );
+
   let remaining = quantity;
   let totalCost = 0;
 
@@ -50,6 +57,7 @@ export async function handleSale(event) {
     }
   }
 
+  // Insert sale record (product exists now, so foreign key constraint is satisfied)
   await pool.query(
     `INSERT INTO sales (product_id, quantity, total_cost, timestamp)
      VALUES ($1, $2, $3, $4)`,

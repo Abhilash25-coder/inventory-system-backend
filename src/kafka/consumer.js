@@ -28,13 +28,21 @@ export async function startConsumer() {
 
   await consumer.run({
     eachMessage: async ({ message }) => {
-      const event = JSON.parse(message.value.toString());
-      console.log("📥 Event:", event);
+      try {
+        const event = JSON.parse(message.value.toString());
+        console.log("📥 Event:", event);
 
-      if (event.event_type === "purchase") {
-        await handlePurchase(event);
-      } else if (event.event_type === "sale") {
-        await handleSale(event);
+        if (event.event_type === "purchase") {
+          await handlePurchase(event);
+        } else if (event.event_type === "sale") {
+          await handleSale(event);
+        } else {
+          console.warn("⚠️ Unknown event type:", event.event_type);
+        }
+      } catch (error) {
+        console.error("❌ Error processing message:", error.message);
+        console.error("Event data:", message.value.toString());
+        // Don't rethrow - let KafkaJS handle retries
       }
     },
   });
