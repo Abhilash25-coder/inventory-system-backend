@@ -20,11 +20,13 @@ export default function Login() {
     <div className="login-container">
       <div className="login-card">
         <h1 className="login-title">Login</h1>
-        <input className="login-input" placeholder="Username" onChange={(e) => setUser(e.target.value)} />
-        <input className="login-input" type="password" placeholder="Password" onChange={(e) => setPass(e.target.value)} style={{ marginBottom: "1rem" }} />
-        <button className="login-button" onClick={handleLogin}>
-          Login
-        </button>
+        <div className="login-form">
+          <input className="login-input" placeholder="Username" onChange={(e) => setUser(e.target.value)} />
+          <input className="login-input" type="password" placeholder="Password" onChange={(e) => setPass(e.target.value)} />
+          <button className="login-button" onClick={handleLogin}>
+            Login
+          </button>
+        </div>
       </div>
     </div>
   );
